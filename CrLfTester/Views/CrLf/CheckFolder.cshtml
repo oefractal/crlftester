@@ -1,0 +1,27 @@
+﻿@using CrLfTester.Helpers
+@model IEnumerable<CrLfTester.Classes.CheckResult>
+
+@Styles.Render("~/bundles/jsgridstyles")
+@Scripts.Render("~/bundles/jsgrid")
+<div id="resultsGrid">
+</div>
+<script>
+  var results = [
+    @foreach (var item in Model)
+    {
+      @:{ "FileName": "@item.FileName.Replace("\\", "\\\\")", "CrLf" : "@CrLfHelper.CrLfModeToString(item.CrLfMode)" },
+    }
+  ];
+  $("#resultsGrid").jsGrid({
+    width: "100%",
+    height: "90%",
+    inserting: false,
+    editing: false,
+    sorting: true,
+    paging: false,
+    data: results,
+    fields: [
+      { name: "FileName", type: "text", title: "Имя файла", width: "88%" },
+      { name: "CrLf", type: "text", title: "Перевод строки", width: "12%" }]
+  });
+</script>

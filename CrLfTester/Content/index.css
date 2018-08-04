@@ -1,0 +1,13 @@
+﻿#inputAndButton {
+    display: flex;
+}
+
+#folderInput {
+    width: 100%;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
+
+#testButton {
+    margin-bottom: 6px;
+}

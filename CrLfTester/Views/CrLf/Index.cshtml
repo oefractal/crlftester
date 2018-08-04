@@ -1,0 +1,15 @@
+﻿<html>
+  <head>
+    @Scripts.Render("~/bundles/jquery")
+    @Styles.Render("~/bundles/styles")
+  </head>
+  <body>
+    <div id="inputAndButton">
+      <input id="folderInput" />
+      <button id="testButton">Проверить</button>
+    </div>
+    <div id="results" data-request-url="@Url.Action("CheckFolder", "CrLf")">
+    </div>
+    @Scripts.Render("~/bundles/scripts")
+  </body>
+</html>
