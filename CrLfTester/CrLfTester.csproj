@@ -148,6 +148,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Classes\LineEndingChanger.cs" />
     <Compile Include="Helpers\CrLfHelper.cs" />
     <Compile Include="Models\CheckResult.cs" />
     <Compile Include="Classes\FolderChecker.cs" />
@@ -213,7 +214,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>50780</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

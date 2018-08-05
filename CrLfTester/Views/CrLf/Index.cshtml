@@ -2,15 +2,56 @@
   <head>
     @Scripts.Render("~/bundles/jquery")
     @Styles.Render("~/bundles/styles")
+    @Styles.Render("~/bundles/jsgridstyles")
+    @Scripts.Render("~/bundles/jsgrid")
   </head>
   <body>
     <div id="inputAndButton">
-      <input id="folderInput" placeholder="Папка с файлами"/>
+      <input id="folderInput" placeholder="Папка с файлами" />
       <button id="testButton">Проверить</button>
     </div>
     <input id="fileFilter" placeholder="Фильтр" value="*.cs" />
-    <div id="results" data-request-url="@Url.Action("CheckFolder", "CrLf")">
+    <div id="resultsData" data-request-url="@Url.Action("CheckFolder", "CrLf")">
+    </div>
+    <div id="changeLineEndingLayer">
+      <a href="#" id="changeLineEnding">
+        Изменить
+      </a>
+      символ перевода строки на
+      <select size="1" id="changeLineEndingMode">
+        <option value="CRLF">CR/LF (Windows)</option>
+        <option value="LF">LF (Unix)</option>
+        <option value="CR">CR (Mac)</option>
+      </select>
+    </div>
+    <div id="resultsGrid">
     </div>
     @Scripts.Render("~/bundles/scripts")
+    <script>
+      function GetSelectedModeString() {
+        var currentValue = $("#changeLineEndingMode").val();
+        if (currentValue == "CRLF")
+          return "CrLf";
+        else if (currentValue == "CR")
+          return "Cr";
+        else if (currentValue = "LF")
+          return "Lf";
+        else
+          return "Error";
+      }
+
+      $("#changeLineEnding").on("click", function () {
+        var items = $("#resultsGrid").jsGrid("option", "data");
+        for (var itemIndex = 0; itemIndex < items.length; itemIndex++) {
+          var item = items[itemIndex];
+          if (item.CheckBox) {
+            $.ajax({
+              url: "@Url.Action("ChangeFileLineEnding", "CrLf")?fileName=" + encodeURIComponent(item.FileName) + "&mode=" + GetSelectedModeString(),
+              type: "post"
+            })
+          }
+        }
+      });
+    </script>
   </body>
 </html>

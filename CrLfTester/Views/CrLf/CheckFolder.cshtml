@@ -1,15 +1,11 @@
 ﻿@using CrLfTester.Helpers
 @model IEnumerable<CrLfTester.Classes.CheckResult>
 
-@Styles.Render("~/bundles/jsgridstyles")
-@Scripts.Render("~/bundles/jsgrid")
-<div id="resultsGrid">
-</div>
 <script>
   var results = [
     @foreach (var item in Model)
     {
-      @:{ "FileName": "@item.FileName.Replace("\\", "\\\\")", "CrLf" : "@CrLfHelper.CrLfModeToString(item.CrLfMode)" },
+      @:{ "CheckBox": false, "FileName": "@item.FileName.Replace("\\", "\\\\")", "CrLf" : "@CrLfHelper.CrLfModeToString(item.CrLfMode)" },
     }
   ];
   $("#resultsGrid").jsGrid({
@@ -21,7 +17,16 @@
     paging: false,
     data: results,
     fields: [
-      { name: "FileName", type: "text", title: "Имя файла", width: "88%" },
-      { name: "CrLf", type: "text", title: "Перевод строки", width: "12%" }]
+      {
+        name: "CheckBox", title: "", align: "center", width: "2%", itemTemplate: function (value, item) {
+          return $("<input>").attr("type", "checkbox")
+            .attr("checked", value || item.CheckBox)
+            .on("change", function () {
+              item.CheckBox = $(this).is(":checked");
+            });
+        }
+      },
+      { name: "FileName", type: "text", title: "Имя файла", width: "87%" },
+      { name: "CrLf", type: "text", title: "Перевод строки", width: "11%" }]
   });
 </script>
