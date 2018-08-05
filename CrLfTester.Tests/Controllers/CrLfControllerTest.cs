@@ -9,9 +9,15 @@ using CrLfTester.Controllers;
 
 namespace CrLfTester.Tests.Controllers
 {
+  /// <summary>
+  /// Тест контроллера.
+  /// </summary>
   [TestClass]
   public class CrLfControllerTest
   {
+    /// <summary>
+    /// Тест метода контроллера, возвращающего главное представление.
+    /// </summary>
     [TestMethod]
     public void Index()
     {

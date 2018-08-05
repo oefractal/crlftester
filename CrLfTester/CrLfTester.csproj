@@ -149,6 +149,8 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Classes\LineEndingChanger.cs" />
+    <Compile Include="Classes\LineEndingChecker.cs" />
+    <Compile Include="Classes\LineEndingConsts.cs" />
     <Compile Include="Helpers\CrLfHelper.cs" />
     <Compile Include="Models\CheckResult.cs" />
     <Compile Include="Classes\FolderChecker.cs" />

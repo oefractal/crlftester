@@ -9,16 +9,6 @@ namespace CrLfTester.Classes
   public class FolderChecker
   {
     /// <summary>
-    /// Код символа перевода строки.
-    /// </summary>
-    private const int CarriageReturnByte = 13;
-
-    /// <summary>
-    /// Код символа возврата каретки.
-    /// </summary>
-    private const int LineFeedByte = 10;
-
-    /// <summary>
     /// Имя папки.
     /// </summary>
     private string folderName;
@@ -29,58 +19,15 @@ namespace CrLfTester.Classes
     private string filter;
 
     /// <summary>
-    /// Изменить задетекченный режим перевода строки с учетом текущей строки.
-    /// </summary>
-    /// <param name="prevMode">Затетекченный ранее режим.</param>
-    /// <param name="currentMode">Текущий режим.</param>
-    /// <returns>Результирующий режим.</returns>
-    private CrLfMode ChangeDetectedMode(CrLfMode prevMode, CrLfMode currentMode)
-    {
-      if (prevMode == CrLfMode.Unknown)
-        return currentMode;
-      else if (prevMode == currentMode)
-        return currentMode;
-      else
-        return CrLfMode.Mixed;
-    }
-
-    /// <summary>
     /// Проверить файл.
     /// </summary>
     /// <param name="fileName">Имя файла.</param>
     /// <returns>Результат проверки файла.</returns>
-    private CheckResult CheckFile(string fileName)
+    public CheckResult CheckFile(string fileName)
     {
       var result = new CheckResult() { FileName = fileName };
-      var detectedMode = CrLfMode.Unknown;
-      using (var fileStream = new FileStream(fileName, FileMode.Open))
-      {
-        using (var streamReader = new StreamReader(fileStream))
-        {
-          var prevPrevByte = -1;
-          var prevByte = -1;
-          do
-          {
-            var currentByte = streamReader.Read();
-            if (currentByte != CarriageReturnByte && currentByte != LineFeedByte)
-            {
-              if (prevByte == CarriageReturnByte)
-                detectedMode = this.ChangeDetectedMode(detectedMode, CrLfMode.Cr);
-              else if (prevByte == LineFeedByte)
-              {
-                if (prevPrevByte == CarriageReturnByte)
-                  detectedMode = this.ChangeDetectedMode(detectedMode, CrLfMode.CrLf);
-                else
-                  detectedMode = this.ChangeDetectedMode(detectedMode, CrLfMode.Lf);
-              }
-            }
-            prevPrevByte = prevByte;
-            prevByte = currentByte;
-          }
-          while (streamReader.Peek() >= 0);
-        }
-      }
-      result.CrLfMode = detectedMode;
+      var checker = new LineEndingChecker(fileName);
+      result.CrLfMode = checker.Check();
       return result;
     }
 

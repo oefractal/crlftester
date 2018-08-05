@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 
@@ -25,7 +26,38 @@ namespace CrLfTester.Classes
     /// </summary>
     public void Execute()
     {
-
+      var tempFileName = Path.GetTempFileName();
+      try
+      {
+        using (var sourceStream = new FileStream(this.fileName, FileMode.Open))
+        {
+          using (var sourceReader = new StreamReader(sourceStream))
+          {
+            using (var destFileStream = new FileStream(tempFileName, FileMode.Open))
+            {
+              using (var destWriter = new StreamWriter(destFileStream))
+              {
+                var prevPrevByte = -1; 
+                var prevByte = -1;
+                while (sourceReader.Peek() != -1)
+                {
+                  var currentByte = sourceReader.Read();
+                  if (currentByte != LineEndingConsts.CarriageReturnByte &&
+                      currentByte != LineEndingConsts.LineFeedByte)
+                    destWriter.Write(currentByte);
+                  prevPrevByte = prevByte;
+                  prevByte = currentByte;
+                }
+              }
+            }
+          }
+        }
+        File.Copy(tempFileName, this.fileName, true);
+      }
+      finally
+      {
+        File.Delete(tempFileName);
+      }
     }
 
     /// <summary>
