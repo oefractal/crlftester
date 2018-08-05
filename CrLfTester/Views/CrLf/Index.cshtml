@@ -5,9 +5,10 @@
   </head>
   <body>
     <div id="inputAndButton">
-      <input id="folderInput" />
+      <input id="folderInput" placeholder="Папка с файлами"/>
       <button id="testButton">Проверить</button>
     </div>
+    <input id="fileFilter" placeholder="Фильтр" value="*.cs" />
     <div id="results" data-request-url="@Url.Action("CheckFolder", "CrLf")">
     </div>
     @Scripts.Render("~/bundles/scripts")

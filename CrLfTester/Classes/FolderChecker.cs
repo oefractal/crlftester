@@ -24,6 +24,11 @@ namespace CrLfTester.Classes
     private string folderName;
 
     /// <summary>
+    /// Фильтр.
+    /// </summary>
+    private string filter;
+
+    /// <summary>
     /// Изменить задетекченный режим перевода строки с учетом текущей строки.
     /// </summary>
     /// <param name="prevMode">Затетекченный ранее режим.</param>
@@ -86,7 +91,7 @@ namespace CrLfTester.Classes
     public IEnumerable<CheckResult> CheckFolder()
     {
       var result = new List<CheckResult>();
-      foreach (var fileName in Directory.EnumerateFiles(this.folderName, "*", SearchOption.AllDirectories))
+      foreach (var fileName in Directory.EnumerateFiles(this.folderName, this.filter, SearchOption.AllDirectories))
         result.Add(this.CheckFile(fileName));
       return result;
     }
@@ -95,9 +100,11 @@ namespace CrLfTester.Classes
     /// Конструктор.
     /// </summary>
     /// <param name="folderName">Имя папки.</param>
-    public FolderChecker(string folderName)
+    /// <param name="filter">Фильтр.</param>
+    public FolderChecker(string folderName, string filter)
     {
       this.folderName = folderName;
+      this.filter = filter;
     }
   }
 }

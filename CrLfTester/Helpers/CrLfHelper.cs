@@ -16,6 +16,8 @@ namespace CrLfTester.Helpers
           return "CR/LF";
         case CrLfMode.Mixed:
           return "Смешанный";
+        case CrLfMode.Unknown:
+          return "Неизвестный";
         default:
           return "Ошибка";
       }

@@ -10,9 +10,9 @@ namespace CrLfTester.Controllers
       return View();
     }
 
-    public ActionResult CheckFolder(string folderName)
+    public ActionResult CheckFolder(string folderName, string filter)
     {
-      var folderChecker = new FolderChecker(folderName);
+      var folderChecker = new FolderChecker(folderName, filter);
       var checkResults = folderChecker.CheckFolder();
       return this.View(checkResults);
     }
