@@ -42,12 +42,23 @@
 
       $("#changeLineEnding").on("click", function () {
         var items = $("#resultsGrid").jsGrid("option", "data");
+        var count = 0;
+        for (var itemIndex = 0; itemIndex < items.length; itemIndex++) {
+          var item = items[itemIndex];
+          if (item.CheckBox)
+            count++;
+        }
         for (var itemIndex = 0; itemIndex < items.length; itemIndex++) {
           var item = items[itemIndex];
           if (item.CheckBox) {
             $.ajax({
               url: "@Url.Action("ChangeFileLineEnding", "CrLf")?fileName=" + encodeURIComponent(item.FileName) + "&mode=" + GetSelectedModeString(),
-              type: "post"
+              type: "post",
+              success: function () {
+                count--;
+                if (count == 0)
+                  ReloadResultsGrid();
+              }
             })
           }
         }
