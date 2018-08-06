@@ -22,6 +22,17 @@ namespace CrLfTester.Classes
     private CrLfMode targetMode;
 
     /// <summary>
+    /// Записать целевой тип символа перевода строки.
+    /// </summary>
+    /// <param name="writer">Объект для записи в поток.</param>
+    private void WriteTargetLineEnding(StreamWriter writer)
+    {
+      var destBytes = LineEndingTools.GetLineEndingBytes(targetMode);
+      foreach (var destByte in destBytes)
+        writer.Write((char)destByte);
+    }
+
+    /// <summary>
     /// Выполнить изменение.
     /// </summary>
     public void Execute()
@@ -37,15 +48,34 @@ namespace CrLfTester.Classes
             {
               using (var destWriter = new StreamWriter(destFileStream))
               {
-                var prevPrevByte = -1; 
                 var prevByte = -1;
                 while (sourceReader.Peek() != -1)
                 {
                   var currentByte = sourceReader.Read();
                   if (currentByte != LineEndingConsts.CarriageReturnByte &&
                       currentByte != LineEndingConsts.LineFeedByte)
+                  {
+                    if (prevByte == LineEndingConsts.CarriageReturnByte ||
+                        prevByte == LineEndingConsts.LineFeedByte)
+                      this.WriteTargetLineEnding(destWriter);
                     destWriter.Write(currentByte);
-                  prevPrevByte = prevByte;
+                  }
+                  else
+                  {
+                    if ((prevByte == LineEndingConsts.CarriageReturnByte &&
+                        currentByte == LineEndingConsts.LineFeedByte))
+                    {
+                      this.WriteTargetLineEnding(destWriter);
+                      currentByte = -1;
+                    }
+                    if ((prevByte == LineEndingConsts.CarriageReturnByte &&
+                        currentByte == LineEndingConsts.CarriageReturnByte) ||
+                        (prevByte == LineEndingConsts.LineFeedByte &&
+                         currentByte == LineEndingConsts.LineFeedByte) ||
+                        (prevByte == LineEndingConsts.LineFeedByte &&
+                         currentByte == LineEndingConsts.CarriageReturnByte))
+                      this.WriteTargetLineEnding(destWriter);
+                  }
                   prevByte = currentByte;
                 }
               }

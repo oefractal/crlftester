@@ -13,26 +13,6 @@ namespace CrLfTester.Tests.Controllers
   public class LineEndingChangerTest
   {
     /// <summary>
-    /// Получит ьмассив байт с символами перевода строки.
-    /// </summary>
-    /// <param name="mode">Режим перевода строки.</param>
-    /// <returns>Массив байт с символами перевода строки.</returns>
-    private byte[] GetLineEndingBytes(CrLfMode mode)
-    {
-      switch (mode)
-      {
-        case CrLfMode.Cr:
-          return new byte[] { 13 };
-        case CrLfMode.Lf:
-          return new byte[] { 10 };
-        case CrLfMode.CrLf:
-          return new byte[] { 13, 10 };
-        default:
-          throw new Exception("Передан неверный тип символа перевода строки.");
-      }
-    }
-
-    /// <summary>
     /// Создать исходный файл.
     /// </summary>
     /// <param name="fileName">Имя файла.</param>
@@ -47,7 +27,7 @@ namespace CrLfTester.Tests.Controllers
         {
           var bytes = Encoding.UTF8.GetBytes(sourceString);
           fileStream.Write(bytes, 0, bytes.Length);
-          var lineEndingBytes = this.GetLineEndingBytes(mode);
+          var lineEndingBytes = LineEndingTools.GetLineEndingBytes(mode);
           fileStream.Write(lineEndingBytes, 0, lineEndingBytes.Length);
         }
       }
