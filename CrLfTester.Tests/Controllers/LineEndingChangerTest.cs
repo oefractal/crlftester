@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using CrLfTester.Classes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,11 +14,11 @@ namespace CrLfTester.Tests.Controllers
   public class LineEndingChangerTest
   {
     /// <summary>
-    /// Создать исходный файл.
+    /// Создать тестовый файл.
     /// </summary>
     /// <param name="fileName">Имя файла.</param>
     /// <param name="mode">Режим символа перевода строки.</param>
-    private void CreateSourceFile(out string fileName, CrLfMode mode)
+    private void CreateTestFile(out string fileName, CrLfMode mode)
     {
       var sourceStrings = new string[] { "abcd", "efgh", "jklm" };
       fileName = Path.GetTempFileName();
@@ -34,6 +35,19 @@ namespace CrLfTester.Tests.Controllers
     }
 
     /// <summary>
+    /// Проверить, что файлы совпадают.
+    /// </summary>
+    /// <param name="fileName1">Первый файл.</param>
+    /// <param name="fileName2">Второй файл.</param>
+    /// <returns>Истина, если файлы совпадают.</returns>
+    private bool FilesAreEqual(string fileName1, string fileName2)
+    {
+      var bytes1 = File.ReadAllBytes(fileName1);
+      var bytes2 = File.ReadAllBytes(fileName2);
+      return Enumerable.SequenceEqual(bytes1, bytes2);
+    }
+
+    /// <summary>
     /// Протестировать замену символа перевода строки.
     /// </summary>
     /// <param name="fromMode">Тип перевода строки в исходном файле.</param>
@@ -41,14 +55,24 @@ namespace CrLfTester.Tests.Controllers
     public void TestChanging(CrLfMode fromMode, CrLfMode toMode)
     {
       string sourceFileName;
-      this.CreateSourceFile(out sourceFileName, fromMode);
+      this.CreateTestFile(out sourceFileName, fromMode);
       try
       {
         var changer = new LineEndingChanger(sourceFileName, toMode);
         changer.Execute();
-        var checker = new LineEndingChecker(sourceFileName);
-        var resultMode = checker.Check();
-        Assert.AreEqual(toMode, resultMode);
+        string destFileName;
+        this.CreateTestFile(out destFileName, toMode);
+        try
+        {
+          Assert.IsTrue(this.FilesAreEqual(sourceFileName, destFileName), "Files must be equal.");
+          var checker = new LineEndingChecker(sourceFileName);
+          var resultMode = checker.Check();
+          Assert.AreEqual(toMode, resultMode);
+        }
+        finally
+        {
+          File.Delete(destFileName);
+        }
       }
       finally
       {

@@ -48,6 +48,7 @@ namespace CrLfTester.Classes
             {
               using (var destWriter = new StreamWriter(destFileStream))
               {
+                var prevPrevByte = -1;
                 var prevByte = -1;
                 while (sourceReader.Peek() != -1)
                 {
@@ -56,9 +57,10 @@ namespace CrLfTester.Classes
                       currentByte != LineEndingConsts.LineFeedByte)
                   {
                     if (prevByte == LineEndingConsts.CarriageReturnByte ||
-                        prevByte == LineEndingConsts.LineFeedByte)
+                       (prevPrevByte != LineEndingConsts.CarriageReturnByte &&
+                        prevByte == LineEndingConsts.LineFeedByte))
                       this.WriteTargetLineEnding(destWriter);
-                    destWriter.Write(currentByte);
+                    destWriter.Write((char)currentByte);
                   }
                   else
                   {
@@ -78,6 +80,10 @@ namespace CrLfTester.Classes
                   }
                   prevByte = currentByte;
                 }
+                if (prevByte == LineEndingConsts.CarriageReturnByte ||
+                   (prevPrevByte != LineEndingConsts.CarriageReturnByte &&
+                    prevByte == LineEndingConsts.LineFeedByte))
+                  this.WriteTargetLineEnding(destWriter);
               }
             }
           }
