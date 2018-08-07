@@ -1,4 +1,5 @@
 ﻿using CrLfTester.Classes;
+using System;
 using System.Web.Mvc;
 
 namespace CrLfTester.Controllers
@@ -25,9 +26,16 @@ namespace CrLfTester.Controllers
     /// <returns>Представление с результатами проверки.</returns>
     public ActionResult CheckFolder(string folderName, string filter)
     {
-      var folderChecker = new FolderChecker(folderName, filter);
-      var checkResults = folderChecker.CheckFolder();
-      return this.View(checkResults);
+      try
+      {
+        var folderChecker = new FolderChecker(folderName, filter);
+        var checkResults = folderChecker.CheckFolder();
+        return this.View(checkResults);
+      }
+      catch (Exception e)
+      {
+        return this.View("CheckFolderError", (object)e.Message);
+      }
     }
 
     /// <summary>

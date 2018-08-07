@@ -194,6 +194,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\CrLf\Index.cshtml" />
     <Content Include="Views\CrLf\CheckFolder.cshtml" />
+    <Content Include="Views\CrLf\CheckFolderError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
